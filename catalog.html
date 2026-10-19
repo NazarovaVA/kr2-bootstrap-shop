@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description"
+		content="Каталог товаров для котиков в Meow Market. Игрушки, корм, лежанки, средства для ухода и аксессуары.">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Каталог товаров - Meow Market">
+	<meta property="og:description" content="Игрушки, корм, лежанки и аксессуары для котиков.">
+	<meta property="og:image" content="https://nazarovava.github.io/kr2-bootstrap-shop/images/icon.svg">
+	<title>Meow Market - Каталог</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	<link rel="icon" href="images/icon.svg" type="image/svg+xml">
+
+	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<header class="site-header">
+		<nav class="navbar navbar-expand-lg">
+			<div class="container-fluid site-header__inner">
+				<a class="navbar-brand site-header__logo" href="index.html">
+					<img src="images/logo.gif" alt="Логотип магазина" class="site-header__logo-img">
+					<span class="site-header__logo-text">Meow Market</span>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="mainNav">
+					<ul class="navbar-nav ms-auto site-nav__list">
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="index.html">Главная</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="index.html#advantages">Преимущества</a>
+						</li>
+						<li class="nav-item site-nav__item site-nav__item--active">
+							<a class="nav-link site-nav__link" href="catalog.html">Каталог</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="order.html">Заказать</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="contacts.html">Контакты</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main>
+		<!-- Bootstrap alert: акция -->
+		<div class="container-fluid catalog-alert-wrapper">
+			<div class="alert catalog-alert" role="alert">
+				🎉 Скидка 15% на все лежанки до конца месяца!
+			</div>
+		</div>
+
+		<!-- Bootstrap-сетка: container > row > col -->
+		<div class="container-fluid catalog">
+			<div class="row g-3 w-100">
+
+				<!-- Фильтры (Bootstrap col + sticky) -->
+				<div class="col-lg-3 filters-container">
+					<aside class="filters card">
+						<h2 class="filters__title">Фильтры</h2>
+						<form class="filters__form" action="#" method="get">
+
+							<!-- Сортировка (form-select) -->
+							<div class="filters__sort mb-3">
+								<label class="filters__sort-label form-label" for="sort">Сортировать:</label>
+								<select class="form-select filters__sort-select" id="sort" name="sort">
+									<option value="popular">По популярности</option>
+									<option value="price-asc">Сначала дешёвые</option>
+									<option value="price-desc">Сначала дорогие</option>
+									<option value="new">Сначала новинки</option>
+								</select>
+							</div>
+
+							<!-- Категории (form-check) -->
+							<fieldset class="filters__group mb-3">
+								<legend class="filters__legend">Категория</legend>
+
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="category"
+										value="toys" id="cat-toys">
+									<label class="form-check-label filters__text" for="cat-toys">Игрушки</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="category"
+										value="food" id="cat-food">
+									<label class="form-check-label filters__text" for="cat-food">Корм и
+										лакомства</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="category"
+										value="beds" id="cat-beds">
+									<label class="form-check-label filters__text" for="cat-beds">Лежанки и
+										домики</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="category"
+										value="clothes" id="cat-clothes">
+									<label class="form-check-label filters__text" for="cat-clothes">Одежда</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="category"
+										value="care" id="cat-care">
+									<label class="form-check-label filters__text" for="cat-care">Уход и гигиена</label>
+								</div>
+							</fieldset>
+
+							<!-- Цена (form-control) -->
+							<fieldset class="filters__group mb-3">
+								<legend class="filters__legend">Цена, ₽</legend>
+
+								<div class="filters__price-row d-flex gap-2">
+									<label class="filters__price-label flex-fill">
+										<span class="filters__price-text">от</span>
+										<input class="form-control filters__price-input" type="number" name="price-min"
+											min="0" placeholder="0">
+									</label>
+									<label class="filters__price-label flex-fill">
+										<span class="filters__price-text">до</span>
+										<input class="form-control filters__price-input" type="number" name="price-max"
+											min="0" placeholder="5000">
+									</label>
+								</div>
+							</fieldset>
+
+							<!-- Особенности (form-check) -->
+							<fieldset class="filters__group mb-3">
+								<legend class="filters__legend">Особенности</legend>
+
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="feature"
+										value="discount" id="feat-discount">
+									<label class="form-check-label filters__text" for="feat-discount">Со скидкой</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="feature"
+										value="new" id="feat-new">
+									<label class="form-check-label filters__text" for="feat-new">Новинки</label>
+								</div>
+								<div class="form-check filters__label">
+									<input class="form-check-input filters__checkbox" type="checkbox" name="feature"
+										value="hit" id="feat-hit">
+									<label class="form-check-label filters__text" for="feat-hit">Хиты</label>
+								</div>
+							</fieldset>
+
+							<!-- Кнопки (btn) -->
+							<div class="filters__actions d-flex gap-2 justify-content-center mt-3">
+								<button class="btn btn-primary filters__button filters__button--apply"
+									type="submit">Применить</button>
+								<button class="btn btn-outline-primary filters__button filters__button--reset"
+									type="reset">Сбросить</button>
+							</div>
+						</form>
+					</aside>
+				</div>
+
+				<!-- Товары (Bootstrap col) -->
+				<div class="col-lg-9 products-container">
+					<h1 class="catalog__title">Каталог товаров</h1>
+					<div class="row g-3 products"></div>
+				</div>
+
+			</div>
+		</div>
+	</main>
+
+	<!-- FOOTER -->
+	<footer class="site-footer">
+		<div class="site-footer__inner">
+			<a href="index.html" class="site-footer__logo">
+				<img src="images/logo.gif" alt="Meow Market" class="site-footer__logo-img">
+				Meow Market
+			</a>
+			<ul class="site-footer__contacts">
+				<li>+7 (800) 555-35-35</li>
+				<li>meowmarket@mail.ru</li>
+				<li>Москва, пр-т Вернадского, д. 78, с. 4</li>
+			</ul>
+			<p class="site-footer__copy"><span>©</span> 2026 Учебный проект. Все права защищены.</p>
+		</div>
+	</footer>
+
+	<!-- Кнопка "Голосование" -->
+	<button class="cat-vote-btn" id="openCatBtn" type="button">Голосование ♥</button>
+
+	<!-- Панель с котом -->
+	<aside class="cat-panel" id="panel">
+		<div class="cat-panel__inner">
+			<div class="cat-panel__title">Заслуживает подарка?</div>
+			<div class="cat-panel__content"></div>
+		</div>
+		<button class="cat-panel__button" id="closeCatBtn" type="button">Да, он прекрасен!</button>
+	</aside>
+
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script type="module" src="js/main.js"></script>
+</body>
+
+</html>

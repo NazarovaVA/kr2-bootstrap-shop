@@ -1,0 +1,307 @@
+'use strict';
+
+// Подстановка товара и модалка
+const orderForm = document.getElementById('orderForm');
+
+async function getOrderProduct() {
+	const params = new URLSearchParams(window.location.search);
+	const productId = params.get('id');
+	if (!productId) return;
+
+	const products = (await import('../data/products.json', { with: { type: 'json' } })).default.products;
+	const product = products.find(p => p.id === productId);
+	if (!product) return;
+
+	const productInput = document.getElementById('orderProduct');
+	const articleInput = document.getElementById('orderArticle');
+
+	if (productInput) productInput.value = product.name;
+	if (articleInput) articleInput.value = product.id;
+}
+
+// Bootstrap modal
+const successModalEl = document.getElementById('successModal');
+
+if (orderForm && successModalEl) {
+	const successModal = new bootstrap.Modal(successModalEl);
+	orderForm.addEventListener('submit', (e) => {
+		e.preventDefault();
+		successModal.show();
+		orderForm.reset();
+		if (typeof getOrderProduct === 'function') getOrderProduct();
+	});
+}
+
+// Слайдер шагов оформления товаров
+const stepSlides = document.querySelectorAll('.step-card__slide');
+const stepDots = document.querySelectorAll('.step-card__dot');
+const stepCard = document.getElementById('stepCard');
+const stepSection = document.querySelector('.how-to-order');
+
+let stepIndex = 0;
+let stepTimer = null;
+
+function showStep(n) {
+	stepIndex = n;
+	stepSlides.forEach((s, k) => s.classList.toggle('step-card__slide--active', k === n));
+	stepDots.forEach((d, k) => d.classList.toggle('step-card__dot--active', k === n));
+}
+
+const nextStep = () => showStep((stepIndex + 1) % stepSlides.length);
+const startStep = () => { stepTimer ??= setInterval(nextStep, 3000); };
+const stopStep = () => { clearInterval(stepTimer); stepTimer = null; };
+
+if (stepCard) {
+	// Клик по карточке - следующий шаг
+	stepCard.addEventListener('click', () => {
+		nextStep();
+		stopStep();
+		startStep();
+	});
+
+	// Клик по точке - конкретный шаг
+	stepDots.forEach(dot => dot.addEventListener('click', (e) => {
+		e.stopPropagation();
+		showStep(+dot.dataset.index);
+		stopStep();
+		startStep();
+	}));
+
+	// Enter/Space на карточке - следующий шаг
+	stepCard.addEventListener('keydown', (e) => {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			nextStep();
+			stopStep();
+			startStep();
+		}
+	});
+	// Автозапуск, когда секция в зоне видимости
+	new IntersectionObserver(
+		([entry]) => entry.isIntersecting ? startStep() : stopStep(),
+		{ threshold: 0.5 }
+	).observe(stepSection);
+}
+
+// Популярные товары, рендер из JSON
+const productsGrid = document.querySelector('.products__grid');
+
+async function getPopularItems() {
+	const products = (await import('../data/popular.json', { with: { type: 'json' } })).default.products;
+
+	products.forEach(product => {
+    productsGrid.innerHTML += `
+        <article class="product-card card" id="${product.id}"
+            style="background-image: url(${product.image_url})">
+            <div class="product-card__badge badge">${product.badge}</div>
+            <div class="product-card__spacer"></div>
+            <div class="product-card__content">
+                <div class="product-card__name">${product.name}</div>
+                <div class="product-card__info">
+                    <div class="product-card__price">${product.price}₽</div>
+                    <div class="product-card__actions">
+                        <a class="product-card__more btn btn-sm" href="product.html?id=${product.id}">Подробнее</a>
+                        <a class="product-card__buy btn btn-sm" href="order.html?id=${product.id}">Заказать</a>
+                    </div>
+                </div>
+            </div>
+        </article>`;
+});
+};
+
+// Каталог товаров
+const productsContainer = document.querySelector('.products');
+
+async function getItems() {
+	const products = (await import('../data/products.json', { with: { type: 'json' } })).default.products;
+
+	products.forEach(product => {
+		productsContainer.innerHTML += `
+			<div class="col-md-6 col-xl-4">
+				<article class="product-card catalog-product-card card" id="${product.id}"
+					style="background-image: url(${product.image_url})">
+					<div class="product-card__badge badge">${product.badge}</div>
+					<div class="product-card__spacer"></div>
+					<div class="product-card__content">
+						<div class="product-card__name catalog-product-card__name">${product.name}</div>
+						<div class="product-card__info catalog-product-card__info">
+							<div class="product-card__price catalog-product-card__price">${product.price}₽</div>
+							<div class="product-card__actions catalog-product-card__actions">
+								<a class="product-card__more catalog-product-card__more btn btn-sm" href="product.html?id=${product.id}">Подробнее</a>
+								<a class="product-card__buy catalog-product-card__buy btn btn-sm" href="order.html?id=${product.id}">Заказать</a>
+							</div>
+						</div>
+					</div>
+				</article>
+			</div>`;
+	});
+}
+
+// Страница товара
+const productSection = document.querySelector('.product');
+
+async function getProduct() {
+	const params = new URLSearchParams(window.location.search);
+	const id = params.get('id');
+	if (!id) return;
+
+	const products = (await import('../data/products.json', { with: { type: 'json' } })).default.products;
+	const product = products.find(p => p.id === id);
+
+	if (!product) {
+		document.querySelector('.product__title').textContent = 'Товар не найден';
+		return;
+	}
+
+	document.querySelector('.product__title').textContent = product.name;
+	document.querySelector('.product__price').textContent = product.price + '₽';
+	document.querySelector('.product__badge').textContent = product.badge || '';
+	document.querySelector('.product__description').textContent = product.description;
+	document.querySelector('.product__image').style.backgroundImage = `url(${product.image_url})`;
+
+	const tbody = document.querySelector('.product__table-body');
+	tbody.innerHTML = Object.entries(product.characteristics)
+		.map(([key, value]) => `
+			<tr>
+				<th scope="row">${key}</th>
+				<td>${value}</td>
+			</tr>
+		`)
+		.join('');
+
+	const orderBtn = document.querySelector('.product__actions .button');
+	if (orderBtn) {
+		orderBtn.href = `order.html?id=${product.id}`;
+	}
+}
+
+//Печатающиеся факты
+const factCard = document.querySelector('.fact-card');
+const factText = document.querySelector('.fact-card__text');
+
+//Обход CORS
+const PROXY_URL = 'https://corsproxy.io/?key=529630cd&url=';
+
+async function fetchWithTimeout(url, ms = 8000) {
+  const ctrl = new AbortController();
+  const t = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { signal: ctrl.signal });
+  } finally {
+    clearTimeout(t);
+  }
+}
+
+async function translateText(text, targetLang = 'ru') {
+	const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+	const res = await fetch(url);
+	if (!res.ok) throw new Error(`HTTP ${res.status}`);
+	const data = await res.json();
+	return data[0].map(sentence => sentence[0]).join(' ');
+}
+
+async function getFact() {
+	factText.innerHTML = '';
+	try {
+		const targetUrl = 'https://catfact.ninja/fact';
+		const finalUrl = `${PROXY_URL}${encodeURIComponent(targetUrl)}`;
+		const res = await fetchWithTimeout(finalUrl);
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const data = await res.json();
+		const factTextRu = await translateText(data.fact, 'ru');
+		typeLetter(factTextRu, factText, 0, 40);
+	} catch (err) {
+		factText.innerHTML = 'Самый богатый кот в мире стоит 13 миллионов долларов...';
+		console.error('Ошибка:', err);
+	}
+}
+
+if (factCard) {
+	factCard.addEventListener('click', () => getFact());
+}
+
+
+
+// Выезжающая панель
+const catPanel = document.getElementById('panel');
+const catImageWrap = document.querySelector('.cat-panel__content');
+
+async function getCat() {
+	try {
+		catImageWrap.innerText = 'Загрузка...';
+		// cache-busting: уникальный параметр каждый раз
+		const targetUrl = `https://aleatori.cat/random.json?_=${Date.now()}`;
+		const finalUrl = `${PROXY_URL}${encodeURIComponent(targetUrl)}`;
+		const res = await fetchWithTimeout(finalUrl);
+		if (!res.ok) throw new Error(`HTTP ${res.status}`);
+		const data = await res.json();
+		catImageWrap.innerHTML = `<img src="${data.url}?_=${Date.now()}" alt="Фото кота">`;
+	} catch (err) {
+		catImageWrap.innerHTML = '<img src="images/best-cat.jpg" alt="Фото кота">';
+		console.error('Ошибка:', err);
+	}
+}
+
+document.getElementById('openCatBtn').onclick = () => {
+	catPanel.classList.add('cat-panel--open');
+	getCat();
+};
+
+document.getElementById('closeCatBtn').onclick = () => catPanel.classList.remove('cat-panel--open');
+
+// Закрытие по Esc
+document.addEventListener('keydown', (e) => {
+	if (e.key === 'Escape') catPanel.classList.remove('cat-panel--open');
+});
+
+// Печатающийся заголовок
+const heroTitle = document.querySelector('.hero__title');
+const fullTextHeader = 'Добро пожаловать в Meow Market — магазин, где живёт любовь к котам ♥';
+
+function typeLetter(fullText, element, i, speed) {
+	if (i < fullText.length) {
+		element.textContent += fullText[i];
+		i++;
+		setTimeout(() => typeLetter(fullText, element, i, speed), speed);
+	}
+}
+
+//Кнопка наверх
+const scrollTopBtn = document.getElementById('scrollTop');
+
+if (scrollTopBtn) {
+	// Показать/скрыть при скролле
+	window.addEventListener('scroll', () => {
+		if (window.scrollY > 400) {
+			scrollTopBtn.classList.add('scroll-top--visible');
+		} else {
+			scrollTopBtn.classList.remove('scroll-top--visible');
+		}
+	});
+
+	// Клик — плавный скролл наверх
+	scrollTopBtn.addEventListener('click', () => {
+		window.scrollTo({ top: 0, behavior: 'smooth' });
+	});
+}
+
+// Начало
+(() => {
+	if (heroTitle) {
+		typeLetter(fullTextHeader, heroTitle, 0, 30);
+		getFact();
+		getPopularItems();
+	}
+
+	if (productsContainer) {
+		getItems();
+	}
+	
+	if (productSection) {
+		getProduct();
+	}
+
+	if (orderForm) {
+		getOrderProduct();
+	}
+})();

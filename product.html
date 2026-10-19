@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="description" content="Страница товара в Meow Market. Подробное описание, характеристики, фото и цена.">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Информация о товаре - Meow Market">
+	<meta property="og:description" content="Подробное описание, фото и цена. Порадуйте своего котика!">
+	<meta property="og:image" content="https://nazarovava.github.io/kr2-bootstrap-shop/images/icon.svg">
+	<title>Meow Market - Информация о товаре</title>
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+	<link rel="icon" href="images/icon.svg" type="image/svg+xml">
+
+	<link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/custom.css">
+</head>
+
+<body>
+
+	<!-- HEADER -->
+	<header class="site-header">
+		<nav class="navbar navbar-expand-lg">
+			<div class="container-fluid site-header__inner">
+				<a class="navbar-brand site-header__logo" href="index.html">
+					<img src="images/logo.gif" alt="Логотип магазина" class="site-header__logo-img">
+					<span class="site-header__logo-text">Meow Market</span>
+				</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="mainNav">
+					<ul class="navbar-nav ms-auto site-nav__list">
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="index.html">Главная</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="index.html#advantages">Преимущества</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="catalog.html">Каталог</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="order.html">Заказать</a>
+						</li>
+						<li class="nav-item site-nav__item">
+							<a class="nav-link site-nav__link" href="contacts.html">Контакты</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+	</header>
+
+	<main>
+		<section class="product">
+			<div class="container">
+				<div class="row g-5 product__container">
+
+					<!-- Галерея (col-md-6, sticky) -->
+					<div class="col-md-6 product__gallery">
+						<div class="product__image"></div>
+					</div>
+
+					<!-- Информация (col-md-6) -->
+					<div class="col-md-6 product__info">
+						<span class="product__badge badge"></span>
+						<h1 class="product__title"></h1>
+						<div class="product__price"></div>
+						<p class="product__description"></p>
+
+						<!-- Кнопка "Заказать" -->
+						<div class="product__actions">
+							<a class="button btn" data-product-order href="order.html">Заказать</a>
+						</div>
+
+						<!-- Таблица характеристик -->
+						<table class="product__table table caption-top">
+							<caption class="product__table-caption">Характеристики товара</caption>
+							<thead class="product__table-head">
+								<tr>
+									<th scope="col">Характеристика</th>
+									<th scope="col">Значение</th>
+								</tr>
+							</thead>
+							<tbody class="product__table-body"></tbody>
+						</table>
+					</div>
+
+				</div>
+			</div>
+		</section>
+	</main>
+
+	<!-- FOOTER -->
+	<footer class="site-footer">
+		<div class="site-footer__inner">
+			<a href="index.html" class="site-footer__logo">
+				<img src="images/logo.gif" alt="Meow Market" class="site-footer__logo-img">
+				Meow Market
+			</a>
+			<ul class="site-footer__contacts">
+				<li>+7 (800) 555-35-35</li>
+				<li>meowmarket@mail.ru</li>
+				<li>Москва, пр-т Вернадского, д. 78, с. 4</li>
+			</ul>
+			<p class="site-footer__copy"><span>©</span> 2026 Учебный проект. Все права защищены.</p>
+		</div>
+	</footer>
+
+	<!-- Кнопка "Голосование" -->
+	<button class="cat-vote-btn" id="openCatBtn" type="button">Голосование ♥</button>
+
+	<!-- Панель с котом -->
+	<aside class="cat-panel" id="panel">
+		<div class="cat-panel__inner">
+			<div class="cat-panel__title">Заслуживает подарка?</div>
+			<div class="cat-panel__content"></div>
+		</div>
+		<button class="cat-panel__button" id="closeCatBtn" type="button">Да, он прекрасен!</button>
+	</aside>
+
+	<script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script type="module" src="js/main.js"></script>
+</body>
+
+</html>
